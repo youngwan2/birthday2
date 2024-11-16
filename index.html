@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>생일 축하</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        cursor: none;
+      }
+
+      body {
+        background: #1a1a1a;
+        color: white;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+      }
+
+      .custom-cursor {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        z-index: 9999;
+      }
+
+      section {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .text-container {
+        text-align: center;
+        padding: 20px;
+        position: relative;
+      }
+
+      h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      h1:hover {
+        color: #ff69b4;
+      }
+
+      p {
+        font-size: 1.8rem;
+        opacity: 0;
+        line-height: 1.6;
+        cursor: pointer;
+      }
+
+      .cake {
+        font-size: 8rem;
+        opacity: 0;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .cake:hover {
+        transform: scale(1.2);
+      }
+
+      .hearts {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        pointer-events: none;
+      }
+
+      .balloon {
+        position: absolute;
+        font-size: 3rem;
+        opacity: 0;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .balloon:hover {
+        transform: scale(1.2) rotate(10deg);
+      }
+
+      .gift-box {
+        font-size: 2.5rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: transform 0.3s;
+      }
+
+      .gift-box:hover {
+        transform: scale(1.2) rotate(5deg);
+      }
+
+      .message-popup {
+        position: fixed;
+        opacity: 0.8;
+        top: 50%;
+        left: 50%;
+        font-size:1.5rem;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        color: #1a1a1a;
+        padding: 20px;
+        border-radius: 10px;
+        display: none;
+        z-index: 1000;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+        p {
+          font-size: 1.2rem;
+        }
+        .cake {
+          font-size: 5rem;
+        }
+        .gift-box {
+          font-size: 3rem;
+        }
+      }
+
+      .sparkle {
+        position: absolute;
+        pointer-events: none;
+        background: white;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="custom-cursor"></div>
+    <div class="message-popup"></div>
+
+    <section id="section1">
+      <div class="text-container">
+        <h1 class="interactive">✨ Happy Birthday! ✨</h1>
+        <p class="interactive">경모 생일 축하함</p>
+        <div class="gift-box interactive" title="클릭해서 선물 열기">🎁</div>
+      </div>
+    </section>
+
+    <section id="section2">
+      <div class="text-container">
+        <div class="cake interactive" title="클릭해서 초 불기">🎂</div>
+        <p class="interactive">늘 건강하고, 행복하길 바람</p>
+      </div>
+    </section>
+
+    <section id="section3">
+      <div class="hearts interactive">❤️</div>
+      <div class="hearts interactive">💖</div>
+      <div class="hearts interactive">💝</div>
+      <div class="text-container">
+        <p class="interactive">늘 잘 되길 바라고, 좋은 날이 되길 바람</p>
+      </div>
+    </section>
+
+    <section id="section4">
+      <div class="balloon interactive">🎈</div>
+      <div class="balloon interactive">🎈</div>
+      <div class="balloon interactive">🎈</div>
+      <div class="text-container">
+        <h1 class="interactive final">다시 한 번 생일 축하한다! 🎉</h1>
+        <p class="interactive">그럼 고생해라!</p>
+      </div>
+    </section>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+
+      
+      // 컨페티 효과
+      function createConfetti(x, y) {
+        const colors = ["#ff69b4", "#87CEEB", "#98FB98", "#DDA0DD", "#F0E68C"];
+
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+
+          document.body.appendChild(confetti);
+
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const angle = Math.random() * Math.PI * 2;
+          const velocity = Math.random() * 300 + 200;
+          const rotation = Math.random() * 360;
+
+          gsap.set(confetti, {
+            position: "fixed",
+            left: "50%",
+            top: "50%",
+            backgroundColor: color,
+            x: "-50%",
+            y: "-50%",
+            rotation: rotation,
+          });
+
+          gsap.to(confetti, {
+            x: Math.random() * 600 - 300,
+            y: Math.random() * 600 - 300,
+            rotation: rotation + Math.random() * 520,
+            duration: 2 + Math.random() * 1,
+            ease: "power1.out",
+            onComplete: () => confetti.remove(),
+          });
+        }
+      }
+
+
+      // 인터랙티브 요소들 설정에서 이벤트 핸들러 수정
+      document.querySelectorAll(".interactive").forEach((element) => {
+        element.addEventListener("click", (e) => {
+          createConfetti(); // x, y 파라미터 제거
+
+          if (element.classList.contains("gift-box")) {
+            showMessage(
+              "원래 이걸 눌러야 선물이 가야 했는데.. 🎉"
+            );
+          }
+
+          gsap.to(element, {
+            scale: 1.2,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+          });
+        });
+      });
+
+      // 커스텀 커서
+      const cursor = document.querySelector(".custom-cursor");
+      document.addEventListener("mousemove", (e) => {
+        gsap.to(cursor, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+        });
+      });
+
+
+      // document.querySelector(".final", (e) => {
+      //   //createConfetti(e.clientX, e.clientY);
+      // });
+      // 인터랙티브 요소들 설정
+      document.querySelectorAll(".interactive").forEach((element) => {
+        element.addEventListener("click", (e) => {
+          if (element.classList.contains("cake")) {
+            element.textContent = "🎂";
+            showMessage("이거 촛불 켜진거임");
+          }
+
+          if (element.classList.contains("gift-box")) {
+            showMessage(
+              "원래 이걸 눌러야 선물이 가야 했는데.. 미리 메시지가 가버렸네? 🎉"
+            );
+          }
+
+          gsap.to(element, {
+            scale: 1.2,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+          });
+        });
+
+        element.addEventListener("mouseenter", () => {
+          gsap.to(cursor, {
+            scale: 2,
+            duration: 0.3,
+          });
+        });
+
+        element.addEventListener("mouseleave", () => {
+          gsap.to(cursor, {
+            scale: 1,
+            duration: 0.3,
+          });
+        });
+      });
+
+      // 메시지 팝업
+      function showMessage(text) {
+        const popup = document.querySelector(".message-popup");
+        popup.textContent = text;
+        popup.style.display = "block";
+        gsap.set(popup, {
+          fontSize:"3rem"
+        })
+        gsap.from(popup, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.3,
+        });
+
+        setTimeout(() => {
+          gsap.to(popup, {
+            scale: 0,
+            opacity: 0,
+
+            duration: 0.3,
+            onComplete: () => {
+              popup.style.display = "none";
+            },
+          });
+        }, 2000);
+      }
+
+      // 기존 스크롤 애니메이션
+      const sections = ["#section1", "#section2", "#section3", "#section4"];
+      sections.forEach((section) => {
+        gsap.to(`${section} h1, ${section} p`, {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          scrollTrigger: {
+            trigger: section,
+            start: "top center",
+            end: "bottom center",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
+      // 케이크 애니메이션
+      gsap.to(".cake", {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#section2",
+          start: "top center",
+          end: "bottom center",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // 선물상자 애니메이션
+      gsap.to(".gift-box", {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#section1",
+          start: "top center",
+          end: "bottom center",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // 하트 애니메이션
+      const hearts = document.querySelectorAll(".hearts");
+      hearts.forEach((heart, index) => {
+        gsap.set(heart, {
+          x: (index - 1) * 100,
+        });
+
+        gsap.to(heart, {
+          opacity: 1,
+          y: -50,
+          duration: 1.5,
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.2,
+          scrollTrigger: {
+            trigger: "#section3",
+            start: "top center",
+            end: "bottom center",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
+      // 풍선 애니메이션
+      const balloons = document.querySelectorAll(".balloon");
+      balloons.forEach((balloon, index) => {
+        gsap.set(balloon, {
+          x: (index - 1) * 100,
+          y: 100,
+        });
+
+        gsap.to(balloon, {
+          opacity: 1,
+          y: -100,
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.3,
+          scrollTrigger: {
+            trigger: "#section4",
+            start: "top center",
+            end: "bottom center",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
